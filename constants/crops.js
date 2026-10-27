@@ -1,0 +1,52 @@
+/**
+ * Smart Kisan - 40+ Common Indian Crops Catalog
+ * Bilingual Telugu and English definitions with standard durations and categories.
+ */
+const CROPS = [
+    { id: 'paddy', en: 'Rice / Paddy', te: 'వరి', category: 'cereal', duration_days: 120 },
+    { id: 'turmeric', en: 'Turmeric', te: 'పసుపు', category: 'spice', duration_days: 240 },
+    { id: 'cotton', en: 'Cotton', te: 'పత్తి', category: 'fiber', duration_days: 160 },
+    { id: 'chilli', en: 'Red Chilli', te: 'ఎర్ర మిరప', category: 'spice', duration_days: 150 },
+    { id: 'groundnut', en: 'Groundnut / Peanut', te: 'వేరుశనగ', category: 'oilseed', duration_days: 110 },
+    { id: 'maize', en: 'Maize / Corn', te: 'మొక్కజొన్న', category: 'cereal', duration_days: 100 },
+    { id: 'sugarcane', en: 'Sugarcane', te: 'చెరకు', category: 'cash', duration_days: 360 },
+    { id: 'bengal_gram', en: 'Bengal Gram / Chickpea', te: 'శనగలు', category: 'pulse', duration_days: 90 },
+    { id: 'red_gram', en: 'Red Gram / Pigeon Pea (Toor)', te: 'కందులు', category: 'pulse', duration_days: 180 },
+    { id: 'black_gram', en: 'Black Gram / Urad', te: 'మినుములు', category: 'pulse', duration_days: 75 },
+    { id: 'green_gram', en: 'Green Gram / Moong', te: 'పెసలు', category: 'pulse', duration_days: 70 },
+    { id: 'soybean', en: 'Soybean', te: 'సోయాబీన్', category: 'oilseed', duration_days: 100 },
+    { id: 'sunflower', en: 'Sunflower', te: 'సూర్యకాంతి', category: 'oilseed', duration_days: 90 },
+    { id: 'mustard', en: 'Mustard', te: 'ఆవాలు', category: 'oilseed', duration_days: 90 },
+    { id: 'sesame', en: 'Sesame / Til', te: 'నువ్వులు', category: 'oilseed', duration_days: 85 },
+    { id: 'castor', en: 'Castor', te: 'ఆముదం', category: 'oilseed', duration_days: 150 },
+    { id: 'tomato', en: 'Tomato', te: 'టమాటా', category: 'vegetable', duration_days: 90 },
+    { id: 'onion', en: 'Onion', te: 'ఉల్లిపాయ', category: 'vegetable', duration_days: 120 },
+    { id: 'potato', en: 'Potato', te: 'బంగాళాదుంప', category: 'vegetable', duration_days: 100 },
+    { id: 'brinjal', en: 'Brinjal / Eggplant', te: 'వంకాయ', category: 'vegetable', duration_days: 130 },
+    { id: 'okra', en: 'Okra / Bhendi', te: 'బెండకాయ', category: 'vegetable', duration_days: 75 },
+    { id: 'cabbage', en: 'Cabbage', te: 'క్యాబేజీ', category: 'vegetable', duration_days: 90 },
+    { id: 'cauliflower', en: 'Cauliflower', te: 'క్యాలీఫ్లవర్', category: 'vegetable', duration_days: 85 },
+    { id: 'green_chilli', en: 'Green Chilli', te: 'పచ్చిమిర్చి', category: 'vegetable', duration_days: 120 },
+    { id: 'ginger', en: 'Ginger', te: 'అల్లం', category: 'spice', duration_days: 220 },
+    { id: 'garlic', en: 'Garlic', te: 'వెల్లుల్లి', category: 'spice', duration_days: 130 },
+    { id: 'banana', en: 'Banana', te: 'అరటి', category: 'fruit', duration_days: 330 },
+    { id: 'mango', en: 'Mango', te: 'మామిడి', category: 'fruit', duration_days: 365 },
+    { id: 'mosambi', en: 'Sweet Orange / Mosambi', te: 'బత్తాయి', category: 'fruit', duration_days: 365 },
+    { id: 'lemon', en: 'Acid Lime / Lemon', te: 'నిమ్మ', category: 'fruit', duration_days: 365 },
+    { id: 'papaya', en: 'Papaya', te: 'బొప్పాయి', category: 'fruit', duration_days: 270 },
+    { id: 'guava', en: 'Guava', te: 'జామ', category: 'fruit', duration_days: 365 },
+    { id: 'pomegranate', en: 'Pomegranate', te: 'దానిమ్మ', category: 'fruit', duration_days: 365 },
+    { id: 'watermelon', en: 'Watermelon', te: 'పుచ్చకాయ', category: 'fruit', duration_days: 85 },
+    { id: 'muskmelon', en: 'Muskmelon', te: 'ఖర్బూజ', category: 'fruit', duration_days: 80 },
+    { id: 'wheat', en: 'Wheat', te: 'గోధుమలు', category: 'cereal', duration_days: 120 },
+    { id: 'bajra', en: 'Pearl Millet / Bajra', te: 'సజ్జలు', category: 'millet', duration_days: 85 },
+    { id: 'ragi', en: 'Finger Millet / Ragi', te: 'రాగులు', category: 'millet', duration_days: 105 },
+    { id: 'jowar', en: 'Sorghum / Jowar', te: 'జొన్నలు', category: 'millet', duration_days: 110 },
+    { id: 'korra', en: 'Foxtail Millet / Korra', te: 'కొర్రలు', category: 'millet', duration_days: 80 },
+    { id: 'tobacco', en: 'Tobacco', te: 'పొగాకు', category: 'cash', duration_days: 120 },
+    { id: 'coriander', en: 'Coriander', te: 'ధనియాలు', category: 'spice', duration_days: 70 },
+    { id: 'cumin', en: 'Cumin', te: 'జీలకర్ర', category: 'spice', duration_days: 100 },
+    { id: 'fenugreek', en: 'Fenugreek', te: 'మెంతులు', category: 'spice', duration_days: 60 }
+];
+
+module.exports = { CROPS };

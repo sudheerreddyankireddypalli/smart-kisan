@@ -1,0 +1,33 @@
+{
+  "name": "smart-kisan",
+  "version": "1.0.0",
+  "description": "Telugu-first farmer support web app for farmers across India",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test test/auth.test.js test/isolation.test.js test/profit.test.js test/features.test.js",
+    "migrate": "node migrations/migrate.js"
+  },
+  "keywords": [
+    "agriculture",
+    "kisan",
+    "farmer",
+    "telugu",
+    "mandi-prices",
+    "weather",
+    "crop-cycle"
+  ],
+  "author": "Smart Kisan Team",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.1"
+  }
+}
