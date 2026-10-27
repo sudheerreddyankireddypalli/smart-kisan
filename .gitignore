@@ -1,15 +1,30 @@
+# Dependencies & Local Binaries
 node_modules/
+.node_bin/
+
+# Environment Secrets (NEVER COMMIT)
 .env
 .env.local
 .env.*.local
+
+# Logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.node_bin/
+
+# System & IDE files
 .idea/
 .gradle/
-build/
-app/build/
 .DS_Store
 Thumbs.db
+
+# Legacy Android & Game files
+app/
+gradle/
+gradlew*
+*.gradle*
+local.properties
+*.png
+tower-stacker-game/
+ENTERPRISE_SCALE_BLUEPRINT.md
