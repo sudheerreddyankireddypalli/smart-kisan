@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="te" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Smart Kisan (స్మార్ట్ కిసాన్) — Telugu-First Farmer App</title>
+    <meta name="description" content="Production-ready Telugu-first agricultural management, crop profitability, live weather, and mandi intelligence.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- App Top Bar -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand-section" onclick="navigateTo('dashboard')">
+                <span class="brand-logo">🌾</span>
+                <div>
+                    <h1 class="brand-title" data-i18n="app_title">స్మార్ట్ కిసాన్</h1>
+                    <div class="brand-subtitle" data-i18n="app_tagline">రైతు నేస్తం — పంట ఖర్చులు, లాభం & మార్కెట్ సమాచారం</div>
+                </div>
+            </div>
+
+            <div class="header-controls">
+                <!-- Language Toggle Button -->
+                <button id="langToggleBtn" class="btn-pill" onclick="toggleLanguage()" title="Change Language">
+                    🌐 <span id="langLabel">English</span>
+                </button>
+
+                <!-- Dark / Light Theme Toggle -->
+                <button id="themeToggleBtn" class="btn-pill" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+                    🌙
+                </button>
+
+                <!-- User Profile / Auth State Icon -->
+                <button id="userAuthBtn" class="btn-pill" onclick="handleAuthNav()" title="Account">
+                    👤 <span id="userShortName" data-i18n="nav_login">లాగిన్</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sub Navigation Bar (Mobile Scrollable) -->
+    <nav class="sub-nav no-print">
+        <div class="sub-nav-container">
+            <button class="nav-link active" data-nav="dashboard" onclick="navigateTo('dashboard')">
+                🏠 <span data-i18n="nav_dashboard">హోమ్</span>
+            </button>
+            <button class="nav-link" data-nav="cycles" onclick="navigateTo('cycles')">
+                🌱 <span data-i18n="nav_cycles">పంటలు</span>
+            </button>
+            <button class="nav-link" data-nav="expenses" onclick="navigateTo('expenses')">
+                💸 <span data-i18n="nav_expenses">ఖర్చులు</span>
+            </button>
+            <button class="nav-link" data-nav="sales" onclick="navigateTo('sales')">
+                💰 <span data-i18n="nav_sales">అమ్మకాలు</span>
+            </button>
+            <button class="nav-link" data-nav="profit" onclick="navigateTo('profit')">
+                📊 <span data-i18n="nav_profit">లాభ నివేదిక</span>
+            </button>
+            <button class="nav-link" data-nav="weather" onclick="navigateTo('weather')">
+                ⛅ <span data-i18n="nav_weather">వాతావరణం</span>
+            </button>
+            <button class="nav-link" data-nav="mandi" onclick="navigateTo('mandi')">
+                📈 <span data-i18n="nav_mandi">మండీ ధరలు</span>
+            </button>
+            <button class="nav-link" data-nav="offers" onclick="navigateTo('offers')">
+                🤝 <span data-i18n="nav_offers">కొనుగోలు ఆఫర్లు</span>
+            </button>
+            <button class="nav-link" data-nav="reminders" onclick="navigateTo('reminders')">
+                🗓️ <span data-i18n="nav_reminders">సాగు సలహాలు</span>
+            </button>
+            <button class="nav-link" data-nav="services" onclick="navigateTo('services')">
+                🚜 <span data-i18n="nav_services">సేవలు</span>
+            </button>
+            <button class="nav-link" data-nav="batches" onclick="navigateTo('batches')">
+                🏷️ <span data-i18n="nav_batches">బ్యాచ్ ట్రాకింగ్</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Views Container -->
+    <main class="main-content">
+
+        <!-- 1. DASHBOARD VIEW -->
+        <section id="view-dashboard" class="screen-view active">
+            <!-- Greeting & Quick Stats Banner -->
+            <div class="card" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #ffffff;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h2 id="dashGreeting" style="font-size: 1.4rem; font-weight: 700; margin-bottom: 4px;">నమస్కారం, రైతు మిత్రమా!</h2>
+                        <p id="dashLocation" style="font-size: 0.95rem; opacity: 0.9;">మీ పంట లెక్కలు మరియు మార్కెట్ సమాచారం</p>
+                    </div>
+                    <button class="btn-secondary" style="background: #ffffff; color: #15803d; border: none; font-weight: 700;" onclick="navigateTo('cycles')">
+                        🌱 <span data-i18n="btn_new_cycle">+ కొత్త పంట</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Financial Summary Quick Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label" data-i18n="stat_total_cost">మొత్తం పెట్టుబడి ఖర్చు</div>
+                    <div id="dashTotalCost" class="stat-value">₹0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label" data-i18n="stat_gross_sales">మొత్తం అమ్మకాలు</div>
+                    <div id="dashGrossSales" class="stat-value">₹0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label" data-i18n="stat_net_profit">నికర లాభం / నష్టం</div>
+                    <div id="dashNetProfit" class="stat-value">₹0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">సాగులో ఉన్న పంటలు</div>
+                    <div id="dashActiveCropsCount" class="stat-value">0</div>
+                </div>
+            </div>
+
+            <!-- Quick Action Grid -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">⚡ శీఘ్ర చర్యలు (Quick Actions)</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <button class="btn-secondary" onclick="openExpenseModal()">
+                        💸 <span data-i18n="btn_add_expense">+ ఖర్చు నమోదు</span>
+                    </button>
+                    <button class="btn-secondary" onclick="openSaleModal()">
+                        💰 <span data-i18n="btn_add_sale">+ అమ్మకం నమోదు</span>
+                    </button>
+                    <button class="btn-secondary" onclick="navigateTo('weather')">
+                        ⛅ <span data-i18n="nav_weather">వాతావరణ సూచన</span>
+                    </button>
+                    <button class="btn-secondary" onclick="navigateTo('mandi')">
+                        📈 <span data-i18n="nav_mandi">మండీ లైవ్ ధరలు</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Active Crop Cycles List on Dashboard -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">🌱 నా ప్రస్తుత పంటలు (Active Crops)</h3>
+                    <button class="btn-secondary btn-sm" onclick="navigateTo('cycles')">అన్నీ చూడండి →</button>
+                </div>
+                <div id="dashCropsList">
+                    <div class="loading-state" data-i18n="loading_text">లోడ్ అవుతోంది...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. CROP CYCLES VIEW -->
+        <section id="view-cycles" class="screen-view">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" data-i18n="cycles_heading">నా పంటల వివరాలు (Crop Cycles)</h2>
+                    <button class="btn-primary btn-sm" onclick="openCycleModal()">
+                        <span data-i18n="btn_new_cycle">+ కొత్త పంట నమోదు</span>
+                    </button>
+                </div>
+                <div id="cyclesListContainer">
+                    <div class="loading-state" data-i18n="loading_text">లోడ్ అవుతోంది...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. EXPENSE DIARY VIEW -->
+        <section id="view-expenses" class="screen-view">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" data-i18n="expenses_heading">ఖర్చుల డైరీ (Expense Diary)</h2>
+                    <button class="btn-primary btn-sm" onclick="openExpenseModal()">
+                        <span data-i18n="btn_add_expense">+ ఖర్చు నమోదు చేయండి</span>
+                    </button>
+                </div>
+
+                <!-- Crop Cycle Filter -->
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label class="form-label">పంట ప్రకారం వడపోత (Filter by Crop):</label>
+                    <select id="expenseCycleFilter" class="form-select" onchange="loadExpenses()">
+                        <option value="">అన్ని పంటల ఖర్చులు (All Crops)</option>
+                    </select>
+                </div>
+
+                <div id="expensesListContainer">
+                    <div class="loading-state" data-i18n="loading_text">లోడ్ అవుతోంది...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. SALES VIEW -->
+        <section id="view-sales" class="screen-view">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" data-i18n="sales_heading">అమ్మకాల రికార్డు (Produce Sales)</h2>
+                    <button class="btn-primary btn-sm" onclick="openSaleModal()">
+                        <span data-i18n="btn_add_sale">+ అమ్మకం నమోదు చేయండి</span>
+                    </button>
+                </div>
+
+                <!-- Crop Cycle Filter -->
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label class="form-label">పంట ప్రకారం వడపోత (Filter by Crop):</label>
+                    <select id="salesCycleFilter" class="form-select" onchange="loadSales()">
+                        <option value="">అన్ని పంటల అమ్మకాలు (All Crops)</option>
+                    </select>
+                </div>
+
+                <div id="salesListContainer">
+                    <div class="loading-state" data-i18n="loading_text">లోడ్ అవుతోంది...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. PROFIT REPORT VIEW -->
+        <section id="view-profit" class="screen-view">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" data-i18n="profit_title">పంట లాభ-నష్టాల నివేదిక</h2>
+                    <button class="btn-secondary btn-sm" onclick="window.print()">
+                        🖨️ <span data-i18n="btn_print">ప్రింట్ / డౌన్‌లోడ్</span>
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">నివేదిక కోసం పంటను ఎంచుకోండి (Select Crop Cycle):</label>
+                    <select id="profitCycleSelector" class="form-select" onchange="loadProfitReport()">
+                        <option value="">-- పంటను ఎంచుకోండి --</option>
+                    </select>
+                </div>
+
+                <div id="profitReportContainer">
+                    <p style="text-align: center; color: var(--text-muted); padding: 20px;">దయచేసి పైన ఉన్న డ్రాప్‌డౌన్ నుండి పంటను ఎంచుకోండి.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. LIVE WEATHER VIEW -->
+        <section id="view-weather" class="screen-view">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" data-i18n="weather_heading">ప్రత్యక్ష వాతావరణ సమాచారం</h2>
+                    <button class="btn-secondary btn-sm" onclick="loadWeather(true)">🔄 రిఫ్రెష్</button>
+                </div>
+
+                <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
+                    <input id="weatherVillageInput" class="form-input" style="flex: 2; min-width: 140px;" placeholder="గ్రామం పేరు (Village)">
+                    <input id="weatherDistrictInput" class="form-input" style="flex: 2; min-width: 140px;" placeholder="జిల్లా (District)">
+                    <button class="btn-primary" style="flex: 1; min-width: 100px;" onclick="searchWeatherCustom()">వెతుకు</button>
+                </div>
+
+                <div id="weatherContainer">
+                    <div class="loading-state" data-i18n="loading_text">లోడ్ అవుతోంది...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. LIVE MANDI PRICES VIEW -->
+        <section id="view-mandi" class="screen-view">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" data-i18n="mandi_heading">లైవ్ మార్కెట్ (మండీ) ధరలు</h2>
+                    <button class="btn-secondary btn-sm" onclick="loadMandiRates(true)">🔄 రిఫ్రెష్</button>
+                </div>
+
+                <!-- Disclaimer Banner -->
+                <div class="alert-box alert-warning">
+                    <span style="font-size: 20px;">⚠️</span>
+                    <div>
+                        <strong data-i18n="mandi_disclaimer_title">హోల్‌సేల్ సూచన ధరలు మాత్రమే</strong>
+                        <p style="font-size: 0.85rem; margin-top: 2px;" data-i18n="mandi_disclaimer_desc">
+                            ఇవి వ్యవసాయ మార్కెట్ యార్డులలో నమోదైన సూచన ధరలు మాత్రమే. హామీ ఇచ్చిన కొనుగోలు ధర కాదు. మీ ఉత్పత్తుల నాణ్యత, రకం మరియు తేమ శాతాన్ని బట్టి వాస్తవ ధర ఉంటుంది.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px;">
+                    <div>
+                        <label class="form-label" data-i18n="mandi_commodity_select">కమోడిటీ / పంట:</label>
+                        <select id="mandiCommoditySelect" class="form-select" onchange="loadMandiRates()">
+                            <option value="Turmeric">Turmeric (పసుపు)</option>
+                            <option value="Paddy">Paddy / Rice (వరి)</option>
+                            <option value="Cotton">Cotton (పత్తి)</option>
+                            <option value="Chilli Red">Red Chilli (ఎర్ర మిరప)</option>
+                            <option value="Groundnut">Groundnut (వేరుశనగ)</option>
+                            <option value="Maize">Maize (మొక్కజొన్న)</option>
+                            <option value="Onion">Onion (ఉల్లిపాయ)</option>
+                            <option value="Tomato">Tomato (టమాటా)</option>
+                            <option value="Bengal Gram">Bengal Gram (శనగలు)</option>
+                            <option value="Red Gram">Red Gram (కందులు)</option>
+                            <option value="Soyabean">Soyabean (సోయాబీన్)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label" data-i18n="mandi_filter_state">రాష్ట్రం:</label>
+                        <select id="mandiStateSelect" class="form-select" onchange="loadMandiRates()">
+                            <option value="Telangana">Telangana (తెలంగాణ)</option>
+                            <option value="Andhra Pradesh">Andhra Pradesh (ఆంధ్రప్రదేశ్)</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="mandiContainer">
+                    <div class="loading-state" data-i18n="loading_text">లోడ్ అవుతోంది...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. BUYER OFFERS VIEW -->
+        <section id="view-offers" class="screen-view">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" data-i18n="offers_heading">వ్యాపారుల కొనుగోలు ఆఫర్లు (Buyer Offers)</h2>
+                    <button class="btn-primary btn-sm" onclick="openOfferModal()">+ ఆఫర్ జోడించు</button>
+                </div>
+
+                <div class="alert-box alert-info">
+                    <span style="font-size: 20px;">ℹ️</span>
+                    <div data-i18n="offers_disclaimer">
+                        రైతు గమనిక: ఈ కొనుగోలు ఆఫర్లు వ్యాపారులు పోస్ట్ చేసినవి. ఎవరికి అమ్మాలనేది పూర్తిగా మీ ఇష్టం. స్మార్ట్ కిసాన్ ఏ వ్యాపారినీ బలవంతం చేయదు.
+                    </div>
+                </div>
+
+                <div id="offersContainer">
+                    <div class="loading-state" data-i18n="loading_text">లోడ్ అవుతోంది...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. CROP-STAGE REMINDERS VIEW -->
+        <section id="view-reminders" class="screen-view">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" data-i18n="reminders_heading">పంట దశలు & సాగు సలహాలు (Crop Calendar)</h2>
+                </div>
+
+                <div class="alert-box alert-warning">
+                    <span style="font-size: 20px;">🌿</span>
+                    <div data-i18n="reminders_disclaimer">
+                        సాధారణ సాంస్కృతిక సమాచారం మాత్రమే: వాతావరణం మరియు నేల రకాన్ని బట్టి పద్ధతులు మారవచ్చు. ఎరువులు లేదా రసాయనాల కొరకు మీ స్థానిక మండల వ్యవసాయ అధికారి (AO/AEO)ని సంప్రదించండి.
+                    </div>
+                </div>
+
+                <div id="remindersContainer">
+                    <div class="loading-state" data-i18n="loading_text">లోడ్ అవుతోంది...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. AGRI SERVICES VIEW -->
+        <section id="view-services" class="screen-view">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" data-i18n="services_heading">స్థానిక వ్యవసాయ సేవలు (Agri Directory)</h2>
+                    <button class="btn-primary btn-sm" onclick="openServiceModal()">+ సర్వీస్ నమోదు</button>
+                </div>
+
+                <!-- Filter Buttons -->
+                <div style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 12px; scrollbar-width: none;">
+                    <button class="btn-pill active" onclick="filterServices('', this)" data-i18n="filter_all_services">అన్నీ</button>
+                    <button class="btn-pill" onclick="filterServices('drone', this)" data-i18n="filter_drone">డ్రోన్ స్ప్రేయింగ్</button>
+                    <button class="btn-pill" onclick="filterServices('machinery', this)" data-i18n="filter_machinery">ట్రాక్టర్ & యంత్రాలు</button>
+                    <button class="btn-pill" onclick="filterServices('labour', this)" data-i18n="filter_labour">కూలీలు</button>
+                    <button class="btn-pill" onclick="filterServices('transport', this)" data-i18n="filter_transport">రవాణా</button>
+                </div>
+
+                <div id="servicesContainer">
+                    <div class="loading-state" data-i18n="loading_text">లోడ్ అవుతోంది...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. BATCH TRACEABILITY VIEW -->
+        <section id="view-batches" class="screen-view">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" data-i18n="batches_heading">ఉత్పత్తి బ్యాచ్ ట్రాకింగ్ (Traceability)</h2>
+                    <button class="btn-primary btn-sm" onclick="openBatchModal()">
+                        <span data-i18n="btn_add_batch">+ కొత్త బ్యాచ్ కోడ్</span>
+                    </button>
+                </div>
+
+                <div class="alert-box alert-info">
+                    <span style="font-size: 20px;">🛡️</span>
+                    <div data-i18n="batch_organic_note">
+                        గమనిక: బ్యాచ్ రికార్డు మీ వ్యవసాయ ఉత్పత్తుల వివరాలను సూచిస్తుంది. 'సేంద్రీయ (Organic)' అని ప్రచారం చేయడానికి గుర్తింపు పొందిన సంస్థల (NPOP/APEDA/Jaivik Bharat) నుండి అధికారిక సర్టిఫికేషన్ తప్పనిసరి.
+                    </div>
+                </div>
+
+                <div id="batchesContainer">
+                    <div class="loading-state" data-i18n="loading_text">లోడ్ అవుతోంది...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 12. USER PROFILE & PRIVACY VIEW -->
+        <section id="view-profile" class="screen-view">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" data-i18n="profile_title">రైతు ప్రొఫైల్ & గోప్యత</h2>
+                    <button class="btn-secondary btn-sm" onclick="logoutUser()" data-i18n="nav_logout">లాగౌట్</button>
+                </div>
+
+                <div id="profileDetailsContainer">
+                    <!-- Populated dynamically -->
+                </div>
+
+                <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--border);">
+
+                <!-- Danger Zone: Delete Account -->
+                <div style="background-color: var(--danger-light); padding: 16px; border-radius: var(--radius-md); border: 1.5px solid var(--danger);">
+                    <h3 style="color: var(--danger); font-size: 1.15rem; font-weight: 700; margin-bottom: 6px;" data-i18n="delete_account_title">
+                        నా ఖాతా మరియు డేటాను శాశ్వతంగా తొలగించు
+                    </h3>
+                    <p style="font-size: 0.9rem; color: var(--text-primary); margin-bottom: 12px;" data-i18n="delete_account_warning">
+                        జాగ్రత్త: మీ ఖాతా తొలగిస్తే మీ పంటలు, ఖర్చులు, అమ్మకాలు మరియు బ్యాచ్ రికార్డులు మొత్తం శాశ్వతంగా తొలగిపోతాయి. ఈ చర్యను వెనక్కి తీసుకోలేరు.
+                    </p>
+                    <button class="btn-danger" onclick="deleteAccountPermanently()">
+                        🗑️ <span data-i18n="btn_delete_account">ఖాతాను శాశ్వతంగా తొలగించు</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 13. AUTH LOGIN VIEW -->
+        <section id="view-login" class="screen-view">
+            <div class="card" style="max-width: 480px; margin: 20px auto;">
+                <div class="card-header" style="justify-content: center; text-align: center;">
+                    <div>
+                        <h2 class="card-title" style="justify-content: center;" data-i18n="login_title">రైతు లాగిన్</h2>
+                        <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;" data-i18n="login_subtitle">
+                            మీ మొబైల్ నంబర్ మరియు పాస్‌వర్డ్ ద్వారా లాగిన్ అవ్వండి
+                        </p>
+                    </div>
+                </div>
+
+                <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="field_phone">10 అంకెల మొబైల్ నంబర్:</label>
+                        <input id="loginPhone" type="tel" maxlength="10" class="form-input" placeholder="9848012345" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="field_password">పాస్‌వర్డ్:</label>
+                        <input id="loginPassword" type="password" class="form-input" placeholder="••••••" required>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="margin-top: 10px;">
+                        <span data-i18n="btn_submit_login">లాగిన్ అవ్వండి</span>
+                    </button>
+                </form>
+
+                <div style="text-align: center; margin-top: 18px;">
+                    <a href="javascript:void(0)" onclick="navigateTo('signup')" style="color: var(--primary); font-weight: 600; text-decoration: none;" data-i18n="no_account_prompt">
+                        ఖాతా లేదా? ఇక్కడ నమోదు చేసుకోండి
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 14. AUTH SIGNUP VIEW -->
+        <section id="view-signup" class="screen-view">
+            <div class="card" style="max-width: 520px; margin: 20px auto;">
+                <div class="card-header" style="justify-content: center; text-align: center;">
+                    <div>
+                        <h2 class="card-title" style="justify-content: center;" data-i18n="signup_title">కొత్త రైతు నమోదు</h2>
+                        <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;" data-i18n="signup_subtitle">
+                            ఉచితంగా నమోదు చేసుకోండి. మీ డేటా సురక్షితం.
+                        </p>
+                    </div>
+                </div>
+
+                <form id="signupForm" onsubmit="handleSignupSubmit(event)">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="field_name">రైతు పేరు (Name):</label>
+                        <input id="signupName" type="text" class="form-input" placeholder="రైతు పేరు" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="field_phone">10 అంకెల మొబైల్ నంబర్:</label>
+                        <input id="signupPhone" type="tel" maxlength="10" class="form-input" placeholder="9848012345" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="field_password">పాస్‌వర్డ్ (కనీసం 6 అక్షరాలు):</label>
+                        <input id="signupPassword" type="password" minlength="6" class="form-input" placeholder="కనీసం 6 అక్షరాలు" required>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="field_state">రాష్ట్రం:</label>
+                            <select id="signupState" class="form-select" required>
+                                <option value="Telangana">Telangana (తెలంగాణ)</option>
+                                <option value="Andhra Pradesh">Andhra Pradesh (ఆంధ్రప్రదేశ్)</option>
+                                <option value="Karnataka">Karnataka</option>
+                                <option value="Maharashtra">Maharashtra</option>
+                                <option value="Tamil Nadu">Tamil Nadu</option>
+                                <option value="Other">ఇతర రాష్ట్రం</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" data-i18n="field_district">జిల్లా:</label>
+                            <input id="signupDistrict" type="text" class="form-input" placeholder="ఉదా: Warangal" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="field_village">గ్రామం / మండలం:</label>
+                        <input id="signupVillage" type="text" class="form-input" placeholder="గ్రామం పేరు" required>
+                    </div>
+
+                    <!-- Required Consent Checkbox -->
+                    <div class="form-group" style="background-color: var(--bg-card-subtle); padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                        <label class="checkbox-label">
+                            <input id="signupConsent" type="checkbox" required>
+                            <span data-i18n="consent_checkbox_text">
+                                నేను నా పంట, ఖర్చులు మరియు అమ్మకాల వివరాలను స్మార్ట్ కిసాన్ యాప్‌లో భద్రపరచడానికి అంగీకరిస్తున్నాను. నా ఆధార్ లేదా బ్యాంక్ ఖాతా వివరాలు ఎన్నడూ సేకరించబడవని తెలుసుకున్నాను.
+                            </span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="margin-top: 10px;">
+                        <span data-i18n="btn_submit_signup">ఖాతా సృష్టించండి</span>
+                    </button>
+                </form>
+
+                <div style="text-align: center; margin-top: 18px;">
+                    <a href="javascript:void(0)" onclick="navigateTo('login')" style="color: var(--primary); font-weight: 600; text-decoration: none;" data-i18n="have_account_prompt">
+                        ఇప్పటికే ఖాతా ఉందా? లాగిన్ అవ్వండి
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========================================================================
+         MODALS (Add/Edit Forms)
+         ======================================================================== -->
+
+    <!-- 1. CROP CYCLE MODAL -->
+    <div id="cycleModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="cycleModalTitle" class="modal-title" data-i18n="btn_new_cycle">కొత్త పంట నమోదు</h3>
+                <button class="btn-close" onclick="closeModal('cycleModal')">&times;</button>
+            </div>
+            <form id="cycleForm" onsubmit="handleCycleSubmit(event)">
+                <input type="hidden" id="cycleEditId">
+
+                <div class="form-group">
+                    <label class="form-label" data-i18n="crop_select_label">పంటను ఎంచుకోండి లేదా టైప్ చేయండి:</label>
+                    <select id="cycleCropSelect" class="form-select" onchange="handleCropSelectChange(this)" required>
+                        <option value="">-- పంటను ఎంచుకోండి --</option>
+                    </select>
+                </div>
+
+                <div id="customCropInputGroup" class="form-group" style="display: none;">
+                    <label class="form-label">పంట పేరు (Custom Crop Name):</label>
+                    <input id="cycleCustomCropName" type="text" class="form-input" placeholder="ఉదా: జామాయిల్ / యూకలిప్టస్">
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="field_start_date">విత్తిన తేదీ:</label>
+                        <input id="cycleStartDate" type="date" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="field_end_date">ముగింపు తేదీ:</label>
+                        <input id="cycleEndDate" type="date" class="form-input">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="field_area_acres">విస్తీర్ణం (ఎకరాలు):</label>
+                        <input id="cycleAreaAcres" type="number" step="0.1" min="0.1" class="form-input" placeholder="ఉదా: 2.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="field_cycle_status">స్థితి:</label>
+                        <select id="cycleStatus" class="form-select">
+                            <option value="active">సాగులో ఉంది (Active)</option>
+                            <option value="completed">పూర్తయింది (Completed)</option>
+                            <option value="abandoned">రద్దు చేయబడింది</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-i18n="field_notes">గమనికలు (ఐచ్ఛికం):</label>
+                    <input id="cycleNotes" type="text" class="form-input" placeholder="విత్తన రకం లేదా వివరాలు...">
+                </div>
+
+                <button type="submit" class="btn-primary" data-i18n="btn_save">భద్రపరచు</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. EXPENSE MODAL (WITH 15 TAP-TO-PICK TILES) -->
+    <div id="expenseModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="expenseModalTitle" class="modal-title" data-i18n="btn_add_expense">ఖర్చు నమోదు చేయండి</h3>
+                <button class="btn-close" onclick="closeModal('expenseModal')">&times;</button>
+            </div>
+            <form id="expenseForm" onsubmit="handleExpenseSubmit(event)">
+                <input type="hidden" id="expenseEditId">
+
+                <div class="form-group">
+                    <label class="form-label">పంటను ఎంచుకోండి (Crop Cycle):</label>
+                    <select id="expenseModalCycleSelect" class="form-select" required>
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+
+                <!-- 15 Tap-to-pick item tiles -->
+                <div class="form-group">
+                    <label class="form-label" data-i18n="expense_tile_prompt">ఖర్చు రకాన్ని ఎంచుకోవడానికి నొక్కండి:</label>
+                    <div id="expenseTilesContainer" class="expense-tiles-grid">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                    <input type="hidden" id="expenseSelectedCategory" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-i18n="field_expense_amount">ఖర్చు మొత్తం (రూపాయలు ₹):</label>
+                    <input id="expenseAmount" type="number" step="1" min="0" class="form-input" placeholder="ఉదా: 3500" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-i18n="field_expense_date">ఖర్చు చేసిన తేదీ:</label>
+                    <input id="expenseDate" type="date" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-i18n="field_notes">గమనికలు (ఐచ్ఛికం):</label>
+                    <input id="expenseNotes" type="text" class="form-input" placeholder="షాపు పేరు లేదా కూలీల వివరాలు...">
+                </div>
+
+                <button type="submit" class="btn-primary" data-i18n="btn_save">భద్రపరచు</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. SALE MODAL -->
+    <div id="saleModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="saleModalTitle" class="modal-title" data-i18n="btn_add_sale">అమ్మకం నమోదు చేయండి</h3>
+                <button class="btn-close" onclick="closeModal('saleModal')">&times;</button>
+            </div>
+            <form id="saleForm" onsubmit="handleSaleSubmit(event)">
+                <input type="hidden" id="saleEditId">
+
+                <div class="form-group">
+                    <label class="form-label">పంటను ఎంచుకోండి (Crop Cycle):</label>
+                    <select id="saleModalCycleSelect" class="form-select" required>
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-i18n="field_gross_sale_amount">మొత్తం అమ్మకం విలువ (రూపాయలు ₹):</label>
+                    <input id="saleAmount" type="number" step="1" min="0" class="form-input" placeholder="ఉదా: 65000" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-i18n="field_deductions">మార్కెట్ తగ్గింపులు / కోతలు / కమిషన్ (₹):</label>
+                    <input id="saleDeductions" type="number" step="1" min="0" class="form-input" placeholder="ఉదా: 1200" value="0">
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="field_quantity">పరిమాణం:</label>
+                        <input id="saleQuantity" type="number" step="0.1" min="0" class="form-input" placeholder="ఉదా: 25.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="field_unit">కొలత ప్రమాణం:</label>
+                        <select id="saleUnit" class="form-select">
+                            <option value="Quintal">Quintal (క్వింటాల్)</option>
+                            <option value="Kg">Kg (కిలోలు)</option>
+                            <option value="Bag">Bag (బస్తా)</option>
+                            <option value="Ton">Ton (టన్ను)</option>
+                            <option value="Box">Box (పెట్టె)</option>
+                            <option value="Other">ఇతర</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="field_buyer">కొనుగోలు చేసిన వ్యాపారి:</label>
+                        <input id="saleBuyer" type="text" class="form-input" placeholder="వ్యాపారి / మార్కెట్ పేరు">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="field_sale_date">అమ్మిన తేదీ:</label>
+                        <input id="saleDate" type="date" class="form-input" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" data-i18n="field_notes">గమనికలు:</label>
+                    <input id="saleNotes" type="text" class="form-input" placeholder="బిల్లు నంబర్ లేదా వివరాలు...">
+                </div>
+
+                <button type="submit" class="btn-primary" data-i18n="btn_save">భద్రపరచు</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. BATCH MODAL -->
+    <div id="batchModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="batchModalTitle" class="modal-title" data-i18n="btn_add_batch">కొత్త బ్యాచ్ రూపొందించండి</h3>
+                <button class="btn-close" onclick="closeModal('batchModal')">&times;</button>
+            </div>
+            <form id="batchForm" onsubmit="handleBatchSubmit(event)">
+                <input type="hidden" id="batchEditId">
+
+                <div class="form-group">
+                    <label class="form-label">పంట పేరు (Crop):</label>
+                    <input id="batchCropName" type="text" class="form-input" placeholder="ఉదా: Turmeric / పసుపు" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <div class="form-group">
+                        <label class="form-label">పరిమాణం (కిలోలు / Kg):</label>
+                        <input id="batchKg" type="number" step="1" min="0" class="form-input" placeholder="ఉదా: 500" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="batch_moisture_label">తేమ శాతం (%):</label>
+                        <input id="batchMoisture" type="number" step="0.1" min="0" max="100" class="form-input" placeholder="ఉదా: 9.5">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="batch_grade_label">నాణ్యత గ్రేడ్:</label>
+                        <select id="batchGrade" class="form-select">
+                            <option value="Grade A">Grade A (ఉత్తమ రకం)</option>
+                            <option value="Grade B">Grade B</option>
+                            <option value="Standard" selected>Standard (సాధారణ)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" data-i18n="batch_status_label">ప్రాసెసింగ్ స్థితి:</label>
+                        <select id="batchStatus" class="form-select">
+                            <option value="received">1. కోత పూర్తయింది (Received)</option>
+                            <option value="dried">2. ఆరబెట్టబడింది (Dried)</option>
+                            <option value="milled">3. మిల్లింగ్ (Milled)</option>
+                            <option value="packed">4. ప్యాకింగ్ (Packed)</option>
+                            <option value="sold">5. విక్రయించబడింది (Sold)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">ప్రాసెసింగ్ & సర్టిఫికేషన్ వివరాలు:</label>
+                    <input id="batchNotes" type="text" class="form-input" placeholder="కల్లం స్థలం లేదా నిల్వ గది...">
+                </div>
+
+                <button type="submit" class="btn-primary" data-i18n="btn_save">భద్రపరచు</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. BUYER OFFER MODAL -->
+    <div id="offerModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">వ్యాపారి ఆఫర్ నమోదు</h3>
+                <button class="btn-close" onclick="closeModal('offerModal')">&times;</button>
+            </div>
+            <form id="offerForm" onsubmit="handleOfferSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label">వ్యాపారి / కంపెనీ పేరు:</label>
+                    <input id="offerBuyerName" type="text" class="form-input" placeholder="ఉదా: శ్రీ బాలాజీ ట్రేడర్స్" required>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <div class="form-group">
+                        <label class="form-label">ఫోన్ నంబర్:</label>
+                        <input id="offerBuyerPhone" type="tel" class="form-input" placeholder="9848012345">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">పంట పేరు:</label>
+                        <input id="offerCropName" type="text" class="form-input" placeholder="Turmeric / పసుపు" required>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                    <div class="form-group">
+                        <label class="form-label">క్వింటా ధర (₹):</label>
+                        <input id="offerPricePerQuintal" type="number" step="1" class="form-input" placeholder="14000" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">కోత (₹):</label>
+                        <input id="offerDeductionPerQuintal" type="number" step="1" class="form-input" placeholder="200" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">పరిమాణం (క్వింటా):</label>
+                        <input id="offerQuantity" type="number" step="1" class="form-input" placeholder="500" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ఆఫర్ గడువు తేదీ:</label>
+                    <input id="offerExpiryDate" type="date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">నిబంధనలు:</label>
+                    <input id="offerTerms" type="text" class="form-input" placeholder="తేమ శాతం, చెల్లింపు విధానం...">
+                </div>
+                <button type="submit" class="btn-primary" data-i18n="btn_save">భద్రపరచు</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 6. AGRI SERVICE PROVIDER MODAL -->
+    <div id="serviceModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">వ్యవసాయ సర్వీస్ నమోదు</h3>
+                <button class="btn-close" onclick="closeModal('serviceModal')">&times;</button>
+            </div>
+            <form id="serviceForm" onsubmit="handleServiceSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label">సర్వీస్ / ప్రొవైడర్ పేరు:</label>
+                    <input id="serviceName" type="text" class="form-input" placeholder="ఉదా: కిసాన్ డ్రోన్ స్ప్రేయింగ్" required>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <div class="form-group">
+                        <label class="form-label">సర్వీస్ రకం:</label>
+                        <select id="serviceType" class="form-select" required>
+                            <option value="drone">డ్రోన్ స్ప్రేయింగ్ (Drone)</option>
+                            <option value="machinery">ట్రాక్టర్ / యంత్రాలు (Machinery)</option>
+                            <option value="labour">కూలీలు (Labour)</option>
+                            <option value="transport">రవాణా (Transport)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">మొబైల్ నంబర్:</label>
+                        <input id="servicePhone" type="tel" class="form-input" placeholder="9848012345" required>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                    <div class="form-group">
+                        <label class="form-label">సేవ ప్రాంతం (Area/Village):</label>
+                        <input id="serviceArea" type="text" class="form-input" placeholder="నిజామాబాద్ / వరంగల్" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">అంచనా రేటు (Quote):</label>
+                        <input id="serviceQuote" type="text" class="form-input" placeholder="₹450 / ఎకరా">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary" data-i18n="btn_save">భద్రపరచు</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="i18n.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
