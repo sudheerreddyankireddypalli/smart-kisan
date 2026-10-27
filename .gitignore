@@ -21,10 +21,12 @@ Thumbs.db
 
 # Legacy Android & Game files
 app/
+build/
 gradle/
 gradlew*
 *.gradle*
 local.properties
+gradle.properties
 *.png
 tower-stacker-game/
 ENTERPRISE_SCALE_BLUEPRINT.md
