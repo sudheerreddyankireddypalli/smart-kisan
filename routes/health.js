@@ -16,7 +16,7 @@ router.get('/health', async (req, res) => {
         database: {
             configured: db.isConfigured(),
             connected: dbStatus.connected,
-            message: dbStatus.message,
+            message: dbStatus.error ? `${dbStatus.message}: ${dbStatus.error}` : dbStatus.message,
             server_time: dbStatus.serverTime || null,
             db_name: dbStatus.database || null
         },
