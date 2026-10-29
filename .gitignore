@@ -28,5 +28,7 @@ gradlew*
 local.properties
 gradle.properties
 *.png
+!portfolio/public/**/*.png
+!portfolio/dist/**/*.png
 tower-stacker-game/
 ENTERPRISE_SCALE_BLUEPRINT.md

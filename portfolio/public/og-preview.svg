@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#030712" />
+      <stop offset="50%" stop-color="#070d1e" />
+      <stop offset="100%" stop-color="#02040a" />
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="50%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#60a5fa" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bgGrad)" />
+
+  <!-- Cyber Grid -->
+  <g opacity="0.12" stroke="#06b6d4" stroke-width="1">
+    <line x1="100" y1="0" x2="100" y2="630" />
+    <line x1="300" y1="0" x2="300" y2="630" />
+    <line x1="500" y1="0" x2="500" y2="630" />
+    <line x1="700" y1="0" x2="700" y2="630" />
+    <line x1="900" y1="0" x2="900" y2="630" />
+    <line x1="1100" y1="0" x2="1100" y2="630" />
+    <line x1="0" y1="100" x2="1200" y2="100" />
+    <line x1="0" y1="250" x2="1200" y2="250" />
+    <line x1="0" y1="400" x2="1200" y2="400" />
+    <line x1="0" y1="550" x2="1200" y2="550" />
+  </g>
+
+  <!-- Glowing Orbs -->
+  <circle cx="200" cy="200" r="180" fill="#a855f7" opacity="0.12" filter="blur(80px)" />
+  <circle cx="1000" cy="450" r="220" fill="#06b6d4" opacity="0.12" filter="blur(90px)" />
+
+  <!-- Content -->
+  <text x="100" y="160" font-family="'JetBrains Mono', monospace" font-size="22" font-weight="600" fill="#a855f7" letter-spacing="4">
+    SUDHEER KUMAR REDDY ANKIREDDYPALLI
+  </text>
+  
+  <text x="100" y="240" font-family="'Plus Jakarta Sans', sans-serif" font-size="62" font-weight="800" fill="#ffffff" letter-spacing="-1">
+    Turning Raw Data Into
+  </text>
+  <text x="100" y="320" font-family="'Plus Jakarta Sans', sans-serif" font-size="62" font-weight="800" fill="url(#textGrad)" letter-spacing="-1">
+    Business Decisions.
+  </text>
+
+  <text x="100" y="410" font-family="'Inter', sans-serif" font-size="24" fill="#94a3b8">
+    Aspiring Data Analyst | Business Intelligence | Freelance Analytics Consultant
+  </text>
+  <text x="100" y="450" font-family="'JetBrains Mono', monospace" font-size="20" fill="#38bdf8">
+    Python  |  SQL  |  Excel  |  Power BI  |  Business Analytics
+  </text>
+
+  <rect x="100" y="520" width="340" height="48" rx="24" fill="#06b6d4" opacity="0.15" stroke="#06b6d4" stroke-width="1.5" />
+  <text x="130" y="551" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="bold" fill="#06b6d4">
+    Hyderabad, India  •  Remote Ready
+  </text>
+</svg>

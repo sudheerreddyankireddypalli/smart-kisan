@@ -8,7 +8,10 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "test": "node --test test/auth.test.js test/isolation.test.js test/profit.test.js test/features.test.js",
-    "migrate": "node migrations/migrate.js"
+    "migrate": "node migrations/migrate.js",
+    "portfolio:dev": "npm --prefix portfolio run dev",
+    "portfolio:build": "npm --prefix portfolio run build",
+    "portfolio:preview": "npm --prefix portfolio run preview"
   },
   "keywords": [
     "agriculture",
